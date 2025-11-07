@@ -1,0 +1,13 @@
+# Ignore Python cache
+__pycache__/
+
+# Ignore model checkpoints
+*.pt
+*.pth
+*.ckpt
+
+# Ignore datasets
+dataset/
+data/
+
+env
