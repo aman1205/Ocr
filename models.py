@@ -15,9 +15,7 @@ class OCRCaptioningModel(nn.Module):
         
         # Projection layers
         self.visual_proj = nn.Sequential(
-            nn.Linear(2048, hidden_dim),
             nn.LayerNorm(hidden_dim),
-            nn.Dropout(0.3),
             nn.GELU()
         )
         self.encoder_proj = nn.Linear(hidden_dim, 512)  # Match T5's d_model
