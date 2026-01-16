@@ -32,7 +32,7 @@ class OCRCaptioningModel(nn.Module):
 
     def forward(self, images, ocr_input_ids, ocr_attention_mask, decoder_input_ids=None, decoder_attention_mask=None):
         # Process visual features
-        vis_features = self.pool(self.cnn(images)).flatten(1)
+        vis_features = self.pool(self.cnn(images))
         
         # Process OCR text
         encoder_outputs = self.t5_model.encoder(
