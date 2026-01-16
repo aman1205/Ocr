@@ -46,9 +46,8 @@ class CaptionGenerator:
     def generate_caption(self, image_path):
         ocr_text = self.extract_text(image_path)
         inputs = self.tokenizer(
-            f"Image shows: {ocr_text}" if ocr_text else "Describe this image",
-            return_tensors="pt"
-        ).to(self.device)
+            f"Image shows: {ocr_text}"
+            ]        )
         
         outputs = self.model.generate(**inputs, max_length=60)
         return self.tokenizer.decode(outputs[0], skip_special_tokens=True).capitalize()

@@ -39,12 +39,6 @@ class OCRCaptioningModel(nn.Module):
         vis_features = self.visual_proj(vis_features)
         vis_features = self.encoder_proj(vis_features)
         
-        # Process OCR text
-        encoder_outputs = self.t5_model.encoder(
-            input_ids=ocr_input_ids,
-            attention_mask=ocr_attention_mask,
-            return_dict=True
-        )
         
         # Combine features
         combined_features = encoder_outputs.last_hidden_state + vis_features.unsqueeze(1)
