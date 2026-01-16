@@ -15,16 +15,13 @@ class OCRCaptioningModel(nn.Module):
         
         # Projection layers
         self.visual_proj = nn.Sequential(
-            nn.Linear(2048, hidden_dim),
             nn.LayerNorm(hidden_dim),
-            nn.Dropout(0.3),
             nn.GELU()
         )
         self.encoder_proj = nn.Linear(hidden_dim, 512)  # Match T5's d_model
         
         # Text components
         self.tokenizer = tokenizer or T5Tokenizer.from_pretrained("t5-small")
-        self.t5_model = T5ForConditionalGeneration.from_pretrained("t5-small")
         
         # Freeze components
         if freeze_backbone:
@@ -35,9 +32,7 @@ class OCRCaptioningModel(nn.Module):
 
     def forward(self, images, ocr_input_ids, ocr_attention_mask, decoder_input_ids=None, decoder_attention_mask=None):
         # Process visual features
-        vis_features = self.pool(self.cnn(images)).flatten(1)
-        vis_features = self.visual_proj(vis_features)
-        vis_features = self.encoder_proj(vis_features)
+        vis_features = self.pool(self.cnn(images))
         
         # Process OCR text
         encoder_outputs = self.t5_model.encoder(
@@ -52,7 +47,6 @@ class OCRCaptioningModel(nn.Module):
         # Generate captions
         decoder_outputs = self.t5_model(
             encoder_outputs=BaseModelOutput(last_hidden_state=combined_features),
-            decoder_input_ids=decoder_input_ids,
             decoder_attention_mask=decoder_attention_mask,
             return_dict=True
         )
